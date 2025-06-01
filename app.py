@@ -5,14 +5,7 @@ import joblib
 import xgboost
 import sklearn
 
-'''
-print(st.__version__)
-print(pd.__version__)
-print(np.__version__)
-print(joblib.__version__)
-print(xgboost.__version__)
-print(sklearn.__version__)
-'''
+
 # 设置页面配置
 st.set_page_config(
     page_title="脑卒中预后预测系统",
