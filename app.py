@@ -94,6 +94,8 @@ def generate_shap_plot(model, input_df, model_name):
 # 主函数
 def main():
     # 加载模型
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    plt.rcParams['axes.unicode_minus'] = False
     models = load_models()
     if not models:
         st.error("没有可用的模型，请确保模型文件已正确保存。")
@@ -115,7 +117,6 @@ def main():
 
     # 主界面：输入特征
     st.header("患者信息输入")
-
     # 创建输入表单
     with st.form("prediction_form"):
         st.subheader("数值型特征")
@@ -159,7 +160,7 @@ def main():
                 st.write(f"**预测概率**: {proba:.4f}")
 
                 # 根据概率给出建议
-                if proba >= 0.7:
+                if proba >= 0.5:
                     st.warning("高风险: 建议立即进行干预")
                 elif proba >= 0.4:
                     st.info("中风险: 建议进一步检查")
