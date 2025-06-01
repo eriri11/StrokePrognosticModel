@@ -104,7 +104,7 @@ def main():
 
     st.sidebar.markdown("---")
     st.sidebar.markdown("### 系统说明")
-    st.sidebar.info("本系统通过机器学习模型分析脑卒中患者数据，预测溶栓后NIHSS评分变化风险")
+    st.sidebar.info("本系统通过机器学习模型分析脑卒中患者数据，预测溶栓后24h的NIHSS评分变化风险")
 
     with st.form("prediction_form"):
         st.header("患者数据输入")
