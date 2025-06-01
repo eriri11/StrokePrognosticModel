@@ -9,9 +9,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import matplotlib
 
-# 设置全局中文字体 - 必须在其他matplotlib操作之前
-matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体显示中文
-matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+
 
 # 设置页面配置
 st.set_page_config(
@@ -174,26 +172,7 @@ def main():
                 else:
                     st.success("低风险！建议常规护理并密切监测", icon="✅")
 
-                # 生成并显示SHAP解释图
-                st.header("🔍 模型解释（SHAP力导向图）")
-                st.markdown("""
-                每个箭头表示一个特征对预测结果的影响：
-                - **红色**：该特征值越高，风险越高（箭头向右）
-                - **蓝色**：该特征值越高，风险越低（箭头向左）
-                - **箭头长度**：特征影响的强度
-                """)
 
-                shap_plot = generate_shap_force_plot(
-                    model=model,
-                    input_df=input_df,
-                    model_name=selected_model,
-                    feature_names=all_features
-                )
-
-                if shap_plot:
-                    st.image(shap_plot, use_container_width=True, caption="特征影响分析")
-                else:
-                    st.warning("该模型暂不支持可视化解释（建议使用XGBoost或随机森林模型）")
 
             except Exception as e:
                 st.error(f"预测过程中出现错误: {str(e)}", icon="🚨")
