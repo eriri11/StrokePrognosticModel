@@ -4,7 +4,9 @@ import numpy as np
 import joblib
 import xgboost
 import sklearn
-
+import shap
+import matplotlib.pyplot as plt
+from io import BytesIO
 
 # 设置页面配置
 st.set_page_config(
@@ -50,6 +52,43 @@ def load_feature_names():
     ]
 
     return numeric_features, categorical_features
+
+
+# 生成SHAP解释图
+def generate_shap_plot(model, input_df, model_name):
+    try:
+        # 为不同模型类型创建适当的解释器
+        if model_name == "XGBoost":
+            explainer = shap.TreeExplainer(model)
+        elif model_name in ["RandomForest", "LogisticRegression"]:
+            explainer = shap.Explainer(model, input_df)
+        else:  # 对于SVM、MLP等模型
+            explainer = shap.KernelExplainer(model.predict_proba, input_df)
+
+        # 计算SHAP值
+        shap_values = explainer(input_df)
+
+        # 创建图表
+        plt.figure(figsize=(10, 6))
+
+        # 根据模型类型选择适当的可视化
+        if model_name in ["XGBoost", "RandomForest"]:
+            shap.plots.waterfall(shap_values[0], max_display=15, show=False)
+        else:
+            shap.plots.bar(shap_values[0], max_display=15, show=False)
+
+        plt.tight_layout()
+
+        # 将图表转换为图像以便在Streamlit中显示
+        buf = BytesIO()
+        plt.savefig(buf, format="png", dpi=150, bbox_inches="tight")
+        plt.close()
+        buf.seek(0)
+
+        return buf
+    except Exception as e:
+        st.error(f"生成SHAP解释时出错: {str(e)}")
+        return None
 
 
 # 主函数
@@ -126,6 +165,21 @@ def main():
                     st.info("中风险: 建议进一步检查")
                 else:
                     st.success("低风险: 建议定期随访")
+
+                # 显示SHAP解释图
+                st.subheader("模型解释 (SHAP)")
+                st.markdown("""
+                SHAP (SHapley Additive exPlanations) 值显示了每个特征对模型预测的贡献:
+                - **红色**表示该特征增加了预测风险
+                - **蓝色**表示该特征降低了预测风险
+                - 条形的长度表示影响的强度
+                """)
+
+                shap_plot = generate_shap_plot(model, input_df, selected_model)
+                if shap_plot:
+                    st.image(shap_plot, use_column_width=True)
+                else:
+                    st.warning("无法为此模型生成SHAP解释图")
 
                 # 显示决策曲线解释
                 st.subheader("决策曲线解释")
