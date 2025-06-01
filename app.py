@@ -7,6 +7,9 @@ import sklearn
 import shap
 import matplotlib.pyplot as plt
 from io import BytesIO
+import matplotlib
+
+
 
 # 设置页面配置
 st.set_page_config(
@@ -19,6 +22,9 @@ st.set_page_config(
 st.title("脑卒中预后预测系统")
 st.markdown("使用机器学习模型预测脑卒中预后风险")
 
+# 设置全局中文字体 - 必须在其他matplotlib操作之前
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体显示中文
+matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 # 加载模型和预处理管道
 @st.cache_data
@@ -57,6 +63,10 @@ def load_feature_names():
 # 生成SHAP解释图
 def generate_shap_plot(model, input_df, model_name):
     try:
+        # 设置SHAP使用的matplotlib配置
+        plt.rcParams['font.sans-serif'] = ['SimHei']
+        plt.rcParams['axes.unicode_minus'] = False
+
         # 为不同模型类型创建适当的解释器
         if model_name == "XGBoost":
             explainer = shap.TreeExplainer(model)
@@ -94,8 +104,6 @@ def generate_shap_plot(model, input_df, model_name):
 # 主函数
 def main():
     # 加载模型
-    plt.rcParams['font.sans-serif'] = ['SimHei']
-    plt.rcParams['axes.unicode_minus'] = False
     models = load_models()
     if not models:
         st.error("没有可用的模型，请确保模型文件已正确保存。")
