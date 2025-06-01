@@ -165,7 +165,8 @@ def main():
                 # 显示预测结果
                 st.header("预测结果")
                 st.write(f"**模型**: {selected_model}")
-                st.write(f"**预测概率**: {proba:.4f}")
+                st.write(f"**溶栓后NIHSS评分上升概率**: {proba:.4f}\n")
+                st.write(f"**溶栓后NIHSS评分下降概率**: {1-proba:.4f}\n")
 
                 # 根据概率给出建议
                 if proba >= 0.5:
@@ -190,13 +191,7 @@ def main():
                 else:
                     st.warning("无法为此模型生成SHAP解释图")
 
-                # 显示决策曲线解释
-                st.subheader("决策曲线解释")
-                st.markdown("""
-                决策曲线分析(DCA)帮助临床医生在不同阈值概率下选择最佳策略：
-                - 当预测概率高于阈值时，建议进行干预
-                - 当预测概率低于阈值时，建议不进行干预
-                """)
+
 
             except Exception as e:
                 st.error(f"预测出错: {str(e)}")
