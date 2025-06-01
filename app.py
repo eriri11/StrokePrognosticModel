@@ -9,7 +9,9 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import matplotlib
 
-
+# 设置全局中文字体 - 必须在其他matplotlib操作之前
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体显示中文
+matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 # 设置页面配置
 st.set_page_config(
@@ -22,9 +24,7 @@ st.set_page_config(
 st.title("脑卒中预后预测系统")
 st.markdown("使用机器学习模型预测脑卒中预后风险")
 
-# 设置全局中文字体 - 必须在其他matplotlib操作之前
-matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体显示中文
-matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+
 
 # 加载模型和预处理管道
 @st.cache_data
