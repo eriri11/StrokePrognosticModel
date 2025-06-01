@@ -42,7 +42,7 @@ def load_feature_names():
     # 以下是示例特征名称，你需要替换为实际使用的特征
     numeric_features = [
         "onset", "DNT", "收缩压", "到院收缩压", "溶栓前肌力左上", "溶栓前肌力右下",
-        "溶栓前braden", "溶栓前NIHSS", "溶栓结束时NIHSS", "溶栓前-溶栓结束", "血糖", "血糖2"
+        "溶栓前braden", "溶栓前NIHSS", "溶栓结束时NIHSS", "血糖", "血糖2", "溶栓前-溶栓结束"
     ]
 
     categorical_features = [
